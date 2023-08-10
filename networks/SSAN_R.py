@@ -19,7 +19,7 @@ class Discriminator(nn.Module):
         self.grl_layer = GRL(max_iter)
 
     def forward(self, feature):
-        adversarial_out = self.ad_net(self.grl_layer(feature))
+        adversarial_out = self.ad_net(self.grl_layer.forward(feature))
         return adversarial_out
 
 

@@ -1,9 +1,11 @@
 import numpy as np
 import cv2
 from torchvision import transforms
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+
 import random
 import torch
-
 
 class Normaliztion(object):
     """
@@ -120,9 +122,12 @@ def transformer_train():
     return transforms.Compose([Contrast_and_Brightness(), RandomHorizontalFlip(), ToTensor(), Cutout(), Normaliztion()])
 
 
-def transformer_train_pure():
-    return transforms.Compose([RandomHorizontalFlip(), ToTensor(), Normaliztion()])
+# def transformer_train_pure():
+#     return transforms.Compose([RandomHorizontalFlip(), ToTensor(), Normaliztion()])
 
+def transformer_train_pure():
+    return transforms.Compose([transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    # return A.Compose([A.HorizontalFlip(), A.Resize(256, 256), A.Cutout(num_holes=3, max_h_size=50, max_w_size=50, p=1), A.Normalize(), ToTensorV2()])
 
 def transformer_train_ImageNet():
     return transforms.Compose([RandomHorizontalFlip(), ToTensor(), Normaliztion_ImageNet()])

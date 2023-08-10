@@ -4,7 +4,7 @@ from torch import nn
 import numpy as np
 
 
-class GRL(nn.Module):
+class GRL(torch.autograd.Function):
 
     def __init__(self, max_iter):
         super(GRL, self).__init__()
@@ -19,7 +19,7 @@ class GRL(nn.Module):
         return input * 1.0
 
     def backward(self, gradOutput):
-        coeff = np.float(2.0 * (self.high - self.low) / (1.0 + np.exp(-self.alpha * self.iter_num / self.max_iter))
+        coeff = np.float64(2.0 * (self.high - self.low) / (1.0 + np.exp(-self.alpha * self.iter_num / self.max_iter))
                          - (self.high - self.low) + self.low)
         return -coeff * gradOutput
 
@@ -50,8 +50,8 @@ class ResnetAdaINBlock(nn.Module):
 
     def forward(self, x, gamma, beta):
         out = self.conv1(x)
-        out = self.norm1(x, gamma, beta)
-        out = self.relu1(x)
-        out = self.conv2(x)
-        out = self.norm2(x, gamma, beta)
+        out = self.norm1(out, gamma, beta)
+        out = self.relu1(out)
+        out = self.conv2(out)
+        out = self.norm2(out, gamma, beta)
         return x+out
